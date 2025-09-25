@@ -2,7 +2,9 @@ import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
 import { env } from '../utils/env.js';
-import { getAllContacts, getContactById } from '../services/contact.js';
+import contactsRouter from '../routers/contacts.js';
+import { errorHandler } from '../middlewares/errorHandler.js';
+import { notFoundHandler } from '../middlewares/notFoundHandler.js';
 
 const PORT = env('PORT', '3000');
 
@@ -11,71 +13,21 @@ export const setupServer = () => {
 
   app.use(pino({ transport: { target: 'pino-pretty' } }));
   app.use(cors());
-  app.use(express.json());
+  app.use(
+    express.json({
+      type: ['application/json', 'application/vnd.api+json'],
+      limit: '100kb',
+    }),
+  );
 
-  // Basic route
-  app.get('/', (req, res) => {
-    res.json({
-      message: 'Server is running',
-      status: 'success',
-      code: 200,
-    });
-  });
+  // Contacts routes
+  app.use(contactsRouter);
 
-  // Get all contacts
-  app.get('/contacts', async (req, res) => {
-    const contacts = await getAllContacts();
+  // 404 Not Found Error handler
+  app.use(notFoundHandler);
 
-    res.status(200).json({
-      message: 'Successfully found contacts!',
-      status: 'success',
-      code: 200,
-      count: contacts.length,
-      data: contacts,
-    });
-  });
-
-  // Get contact by ID
-  app.get('/contacts/:contactId', async (req, res, next) => {
-    try {
-      const contactId = await getContactById(req.params.contactId);
-
-      if (!contactId) {
-        res.status(404).json({
-          message: 'Contact not found',
-          status: 'error',
-          code: 404,
-        });
-      } else {
-        res.status(200).json({
-          message: `Successfully found contact with id ${req.params.contactId}!`,
-          status: 'success',
-          code: 200,
-          data: contactId,
-        });
-      }
-    } catch (err) {
-      next(err);
-    }
-  });
-
-  // 404 handler
-  app.use((req, res) => {
-    res.status(404).json({
-      message: 'Not found',
-      status: 'error',
-      code: 404,
-    });
-  });
-
-  // 500 err handler
-  app.use((err, req, res, next) => {
-    res.status(500).json({
-      message: 'Not found',
-      status: 'error',
-      code: 500,
-    });
-  });
+  // 500 Internal Server Error handler
+  app.use(errorHandler);
 
   // Listening the server
   app.listen(PORT, () => {
