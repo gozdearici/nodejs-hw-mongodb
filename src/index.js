@@ -1,5 +1,11 @@
-import { setupServer } from './server.js';
+import { setupServer } from './server/server.js';
+import { initMongoConnection } from './db/dbConnection/initMongoConnection.js';
 
-console.log('Hello, Node.js with MongoDB!');
+const bootstrap = async () => {
+  console.log('Hello, Node.js with MongoDB!');
 
-setupServer();
+  await initMongoConnection();
+  setupServer();
+};
+
+bootstrap();
