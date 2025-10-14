@@ -1,26 +1,26 @@
 import createHttpError from 'http-errors';
-import { UsersCollection } from '../db/model/userModel.js';
+import { UserCollection } from '../db/model/userModel.js';
 import bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { SessionCollection } from '../db/model/sessionModel.js';
 import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/constants.js';
 
 export const registerUser = async (payload) => {
-  const userExists = await UsersCollection.findOne({
+  const userExists = await UserCollection.findOne({
     email: payload.email,
   });
   if (userExists) throw createHttpError(409, 'Email in use');
 
   const encryptedPassword = await bcrypt.hash(payload.password, 10);
 
-  return await UsersCollection.create({
+  return await UserCollection.create({
     ...payload,
     password: encryptedPassword,
   });
 };
 
 export const loginUser = async (payload) => {
-  const user = await UsersCollection.findOne({ email: payload.email });
+  const user = await UserCollection.findOne({ email: payload.email });
   if (!user) throw createHttpError(404, 'User not found');
 
   const isPasswordValid = await bcrypt.compare(payload.password, user.password);
