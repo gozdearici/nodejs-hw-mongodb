@@ -17,13 +17,6 @@ import { isValidId } from '../middlewares/isValidId.js';
 
 const contactsRouter = Router();
 
-export const getBasicServerController = async (req, res) => {
-  res.json({
-    status: 200,
-    message: 'Server is up and running 🚀',
-  });
-};
-
 // Get all contacts router
 contactsRouter.get('/', ctrlWrapper(getAllContactsController));
 
