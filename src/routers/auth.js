@@ -8,12 +8,8 @@ import {
   refreshUserSessionController,
   registerUserController,
 } from '../controllers/auth.js';
-import { getBasicServerController } from '../controllers/contacts.js';
 
 const authRouter = Router();
-
-// Get basic server router
-authRouter.get('/', ctrlWrapper(getBasicServerController));
 
 authRouter.post(
   '/register',
