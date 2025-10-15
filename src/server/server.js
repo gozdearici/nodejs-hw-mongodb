@@ -23,7 +23,7 @@ export const setupServer = () => {
   app.use(cookieParser());
 
   // Contacts and Auth routes
-  app.use(router);
+  app.use('/', router);
 
   // 404 Not Found Error handler
   app.use(notFoundHandler);
