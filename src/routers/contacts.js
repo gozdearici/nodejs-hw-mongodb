@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import {
-  getBasicServerController,
   getAllContactsController,
   getContactByIdController,
   createContactController,
@@ -15,35 +14,29 @@ import {
   updateContactShema,
 } from '../validation/contacts.js';
 import { isValidId } from '../middlewares/isValidId.js';
-import { authenticate } from '../middlewares/authenticate.js';
 
 const contactsRouter = Router();
 
-contactsRouter.use(authenticate);
-
-// Get basic server router
-contactsRouter.get('/', ctrlWrapper(getBasicServerController));
-
 // Get all contacts router
-contactsRouter.get('/contacts', ctrlWrapper(getAllContactsController));
+contactsRouter.get('/', ctrlWrapper(getAllContactsController));
 
 // Get contact by ID router
 contactsRouter.get(
-  '/contacts/:contactId',
+  '/:contactId',
   isValidId,
   ctrlWrapper(getContactByIdController),
 );
 
 // Create new contact router
 contactsRouter.post(
-  '/contacts',
+  '/',
   validationBody(createContactShema),
   ctrlWrapper(createContactController),
 );
 
 // Update any info of contact router
 contactsRouter.patch(
-  '/contacts/:contactId',
+  '/:contactId',
   isValidId,
   validationBody(updateContactShema),
   ctrlWrapper(patchContactController),
@@ -51,7 +44,7 @@ contactsRouter.patch(
 
 // Update or insert contact router
 contactsRouter.put(
-  '/contacts/:contactId',
+  '/:contactId',
   isValidId,
   validationBody(updateContactShema),
   ctrlWrapper(updateContactController),
@@ -59,7 +52,7 @@ contactsRouter.put(
 
 // Delete contact by Id router
 contactsRouter.delete(
-  '/contacts/:contactId',
+  '/:contactId',
   isValidId,
   ctrlWrapper(deleteContactController),
 );
