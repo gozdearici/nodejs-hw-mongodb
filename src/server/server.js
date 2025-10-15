@@ -1,5 +1,5 @@
 import express from 'express';
-//import pino from 'pino-http';
+import pino from 'pino-http';
 import cors from 'cors';
 import { env } from '../utils/env.js';
 import { errorHandler } from '../middlewares/errorHandler.js';
@@ -12,7 +12,7 @@ const PORT = env('PORT', '3000');
 export const setupServer = () => {
   const app = express();
 
-  //app.use(pino({ transport: { target: 'pino-pretty' } }));
+  app.use(pino({ transport: { target: 'pino-pretty' } }));
   app.use(cors());
   app.use(
     express.json({

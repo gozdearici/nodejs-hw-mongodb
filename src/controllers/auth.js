@@ -21,12 +21,12 @@ export const loginUserController = async (req, res) => {
 
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
-    expiresDate: new Date(Date.now() + FIFTEEN_MINUTES),
+    expires: new Date(Date.now() + FIFTEEN_MINUTES),
   });
 
   res.cookie('sessionId', session._id, {
     httpOnly: true,
-    expiresDate: new Date(Date.now() + ONE_DAY),
+    expires: new Date(Date.now() + ONE_DAY),
   });
 
   res.json({
@@ -34,11 +34,6 @@ export const loginUserController = async (req, res) => {
     message: 'Successfully logged in an user!',
     data: {
       accessToken: session.accessToken,
-      accessTokenValidUntil: session.accessTokenValidUntil,
-      refreshToken: session.refreshToken,
-      refreshTokenValidUntil: session.refreshTokenValidUntil,
-      userId: session.userId,
-      sessionId: session._id,
     },
   });
 };
