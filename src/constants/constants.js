@@ -24,4 +24,11 @@ export const SMTP = {
 export const JWT_SECRET = 'JWT_SECRET';
 export const APP_DOMAIN = 'APP_DOMAIN';
 
-export const TEMPLATES_DIR = path.join(process.cwd(), 'src', 'templates');
+export const TEMPLATES_UPLOAD_DIR = path.join(process.cwd(), 'temps');
+export const UPLOAD_DIR = path.join(process.cwd(), 'uploads');
+
+export const CLOUDINARY_CLOUD_API_KEY = 'CLOUDINARY_CLOUD_API_KEY';
+export const CLOUDINARY_CLOUD_API_SECRET = 'CLOUDINARY_CLOUD_API_SECRET';
+export const CLOUDINARY_CLOUD_NAME = 'CLOUDINARY_CLOUD_NAME';
+
+export const ENABLE_CLOUDINARY = 'ENABLE_CLOUDINARY';

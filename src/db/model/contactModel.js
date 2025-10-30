@@ -26,6 +26,11 @@ const contactsSchema = new Schema(
       default: 'personal',
       enum: ['work', 'home', 'personal'],
     },
+    photoURL: {
+      type: String,
+      default: null,
+      required: false,
+    },
   },
   {
     timestamps: true,

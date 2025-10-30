@@ -10,6 +10,10 @@ import createHttpError from 'http-errors';
 import { paginationParams } from '../utils/paginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { saveFileCloudinary } from '../utils/saveFileCloudinary.js';
+import { saveFileUploads } from '../utils/saveFileUploads.js';
+import { env } from '../utils/env.js';
+import { ENABLE_CLOUDINARY } from '../constants/constants.js';
 
 // Get basic server controller
 export const getBasicServerController = async (req, res) => {
@@ -61,8 +65,18 @@ export const getContactByIdController = async (req, res) => {
 
 // Create new contact controller
 export const createContactController = async (req, res) => {
-  const contact = await createContact(req.body);
+  const photo = req.file;
+  let photoURL = null;
 
+  if (photo) {
+    if (env(ENABLE_CLOUDINARY) === 'true') {
+      photoURL = await saveFileCloudinary(photo);
+    } else {
+      photoURL = await saveFileUploads(photo);
+    }
+  }
+
+  const contact = await createContact({ ...req.body, photoURL: photoURL });
   res.status(201).json({
     message: 'Successfully created a contact!',
     status: 'success',
@@ -74,10 +88,22 @@ export const createContactController = async (req, res) => {
 // Update any info of contact controller
 export const patchContactController = async (req, res) => {
   const { contactId } = req.params;
+  const photo = req.file;
+  let photoURL = null;
+
+  if (photo) {
+    if (env(ENABLE_CLOUDINARY) === 'true') {
+      photoURL = await saveFileCloudinary(photo);
+    } else {
+      photoURL = await saveFileUploads(photo);
+    }
+    req.body.photoURL = photoURL;
+  }
+
   const contact = await patchContact(contactId, req.body);
 
-  if (!contactId) {
-    throw new createHttpError(404, 'Student not found');
+  if (!contact) {
+    throw new createHttpError(404, 'Contact not found');
   }
 
   res.status(200).json({
