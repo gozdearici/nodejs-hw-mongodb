@@ -104,6 +104,7 @@ export const requestResetToken = async (email) => {
   );
 
   console.log(resetToken);
+  console.log(env(JWT_SECRET));
 
   const resetPasswordTemplatePath = path.join(
     process.cwd(),
@@ -118,11 +119,16 @@ export const requestResetToken = async (email) => {
     await fs.readFile(resetPasswordTemplatePath)
   ).toString();
 
+  console.log(templateSource);
+
   const template = handlebars.compile(templateSource);
   const html = template({
     name: user.name,
     link: `${env(APP_DOMAIN)}/reset-password?token=${resetToken}`,
   });
+
+  console.log(html);
+  console.log(env(SMTP.SMTP_FROM));
 
   await sendEmail({
     from: env(SMTP.SMTP_FROM),
