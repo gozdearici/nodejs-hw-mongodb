@@ -128,8 +128,7 @@ export const requestResetToken = async (email) => {
       html,
     });
   } catch (error) {
-    console.error('Email sending failed:', error);
-    throw createHttpError(500, 'Failed to send reset email.');
+    throw createHttpError(500, error.message);
   }
 };
 
@@ -138,7 +137,7 @@ export const resetPassword = async (payload) => {
 
   try {
     entries = jwt.verify(payload.token, env(JWT_SECRET));
-    console.log(entries);
+
     if (!entries?.sub || !entries?.email) {
       throw createHttpError(400, 'Invalid or expired token');
     }
