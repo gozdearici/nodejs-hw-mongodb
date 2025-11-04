@@ -1,4 +1,5 @@
 import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/constants.js';
+import { SessionCollection } from '../db/model/sessionModel.js';
 import {
   loginUser,
   logoutUser,
@@ -93,7 +94,10 @@ export const requestResetEmailController = async (req, res) => {
 };
 
 export const resetPasswordController = async (req, res) => {
-  await resetPassword(req.body);
+  const userId = await resetPassword(req.body);
+
+  await SessionCollection.deleteMany({ userId: userId });
+
   res.json({
     message: 'Password has been successfully reset!',
     status: 200,

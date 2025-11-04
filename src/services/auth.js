@@ -103,9 +103,6 @@ export const requestResetToken = async (email) => {
     },
   );
 
-  console.log(resetToken);
-  console.log(env(JWT_SECRET));
-
   const resetPasswordTemplatePath = path.join(
     process.cwd(),
     'src',
@@ -113,22 +110,15 @@ export const requestResetToken = async (email) => {
     'reset-password-email.html',
   );
 
-  console.log(resetPasswordTemplatePath);
-
   const templateSource = (
     await fs.readFile(resetPasswordTemplatePath)
   ).toString();
-
-  console.log(templateSource);
 
   const template = handlebars.compile(templateSource);
   const html = template({
     name: user.name,
     link: `${env(APP_DOMAIN)}/reset-password?token=${resetToken}`,
   });
-
-  console.log(html);
-  console.log(env(SMTP.SMTP_FROM));
 
   try {
     await sendEmail({
@@ -168,4 +158,6 @@ export const resetPassword = async (payload) => {
     { _id: user._id },
     { password: encryptedPassword },
   );
+
+  return user._id;
 };
