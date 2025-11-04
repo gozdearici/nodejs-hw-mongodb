@@ -103,12 +103,16 @@ export const requestResetToken = async (email) => {
     },
   );
 
+  console.log(resetToken);
+
   const resetPasswordTemplatePath = path.join(
     process.cwd(),
     'src',
     'templates',
     'reset-password-email.html',
   );
+
+  console.log(resetPasswordTemplatePath);
 
   const templateSource = (
     await fs.readFile(resetPasswordTemplatePath)
