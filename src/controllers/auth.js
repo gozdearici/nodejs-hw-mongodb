@@ -98,6 +98,8 @@ export const resetPasswordController = async (req, res) => {
 
   await SessionCollection.deleteMany({ userId: userId });
 
+  req.session = {};
+
   res.json({
     message: 'Password has been successfully reset!',
     status: 200,
